@@ -1,0 +1,27 @@
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+import pandas as pd
+import numpy as np 
+from sklearn import linear_model
+
+def getInput():
+    # F is the number of observed features, H is the number of houses/rows
+    F,H = map(int,input().split())
+    data = np.array([[float(x) for x in input().split()] for i in range(H)])
+    prices = data[:,-1].reshape(H,1)
+    features = data[:,:-1]
+    T = int(input())
+    newFeatures = np.array([[float(x) for x in input().split()] for i in range(T)])
+    return prices,features,newFeatures
+    
+    
+def main():
+    prices, features, newFeatures = getInput()
+    regr = linear_model.LinearRegression()
+    regr.fit(features,prices)
+    predicted = regr.predict(newFeatures)
+    for i in predicted:
+        print(i[0])  
+ 
+    
+if __name__=="__main__":
+    main()
