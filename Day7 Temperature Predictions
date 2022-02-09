@@ -1,0 +1,39 @@
+# Enter your code here. Read input from STDIN. Print output to STDOUT
+import pandas as pd
+import numpy as np
+from time import strptime
+from sklearn.experimental import enable_iterative_imputer
+from sklearn.impute import IterativeImputer
+
+def getMonths(N):
+    months = []
+    for i in range(N):
+        months.append(i%12 + 1)
+    return months
+
+def getInput():
+    N = int(input())
+    labels = input()
+    data = np.array([[(x) for x in input().split()] for i in range(N)])
+    years = data[:,0].astype(int).reshape(N,1)
+    months = np.array(getMonths(N)).reshape(N,1)
+    tmax = pd.to_numeric(data[:,2],errors='coerce').reshape(N,1)
+    #print(tmax)
+    tmin = pd.to_numeric(data[:,-1],errors='coerce').reshape(N,1) 
+    return np.concatenate([tmax,tmin],axis = 1)
+    
+def imputeMissing():
+    data = getInput()
+    missingLoc = np.where(np.isnan(data))
+    listOfIndices = list(zip(missingLoc[0],missingLoc[1]))
+    imp = IterativeImputer(max_iter =50, random_state = 0)
+    imp.fit(data)
+    filledData = np.round(imp.transform(data),decimals=1)
+    for i in listOfIndices:
+        print(filledData[i[0]][i[1]])
+    
+    
+def main():
+    imputeMissing()
+    
+main()
